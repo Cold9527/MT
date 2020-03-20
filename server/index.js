@@ -11,6 +11,7 @@ import dbConfig from './dbs/config.js'
 import passport from './interface/untils/passport'
 import users from './interface/user'
 import geo from './interface/geo'
+import Search from './interface/search'
 
 const app = new Koa()
 
@@ -52,6 +53,7 @@ async function start () {
   }
   app.use(users.routes()).use(users.allowedMethods())
   app.use(geo.routes()).use(geo.allowedMethods())
+  app.use(Search.routes()).use(Search.allowedMethods())
   app.use((ctx) => {
     ctx.status = 200
     ctx.respond = false // Bypass Koa's built-in response handling
