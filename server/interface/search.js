@@ -28,4 +28,17 @@ router.get('/hotPlace',async (ctx)=>{
     }
 })
 
+router.get('/resultsBykeywords',async (ctx)=>{
+    const {city, keyword} = ctx.query;
+    let {status,data:{count,pois}} = await axios.get('http://cp-tools.cn/search/resultsBykeywords',{
+        params:{
+            city,
+            keyword
+        }
+    })
+    ctx.body = {
+        count:status === 200 ? count : '',
+        pois:status === 200 ? pois : ''
+    }
+})
 export default router
