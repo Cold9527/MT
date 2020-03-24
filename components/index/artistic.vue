@@ -116,7 +116,6 @@ export default {
                }
              })
              this.list[this.kind] = r.slice(0,9)
-             console.log(this.list[this.kind])
            }else{
              this.list[this.kind] = []
            }
