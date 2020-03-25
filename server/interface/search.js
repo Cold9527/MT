@@ -17,7 +17,7 @@ router.get('/top',async (ctx)=>{
     }
 })
 router.get('/hotPlace',async (ctx)=>{
-    let city = ctx.store ? ctx.store.state.geo.position.city:ctx.query.city
+    let city = ctx.store ? ctx.store.geo.position.city:ctx.query.city
     let {status, data:{result}} = await axios.get('http://cp-tools.cn/search/hotPlace',{
         params:{
             city

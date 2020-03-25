@@ -24,7 +24,7 @@
                     </dl>                    
                 </div>
                 <p class='suggest'>
-                    <a href='#' v-for="item in this.$store.state.home.Hotplace.slice(5,9)" :key="item.index">{{item.name}}</a>
+                    <a href='#' v-for="item in suggestList" :key="item.index">{{item.name}}</a>
                 </p>
                 <ul class='nav'>
                     <li>
@@ -64,7 +64,8 @@ export default {
         isFocus: false,
         search:'',
         hotPlace:[],
-        searchList:[]
+        searchList:[],
+        suggestList:[],
       }
    },
    computed:{
@@ -74,6 +75,12 @@ export default {
        isSearchList(){
         return this.isFocus && this.search
        }
+   },
+   mounted(){
+       this.hotPlaceChange()
+   },
+   watch: {
+    "$route": "hotPlaceChange"
    },
    methods:{
        focus(){
@@ -85,16 +92,28 @@ export default {
          },200)         
        },
        input:_.debounce(async function(){
-           let city = this.$store.state.geo.position.city.replace('市','')
+           this.city = this.$store.state.geo.position.city.replace('市','')
            this.searchList = []
            let {status, data:{top}} = await this.$axios.get('/search/top',{
                params:{
                    input:this.search,
-                   city
+                   city: this.city
                }
            })
            this.searchList = top.slice(0, 10)
-       },300)
+       },300),
+       
+       hotPlaceChange(){
+            this.$axios.get('/search/hotPlace', {
+                params:{
+                    city:this.$store.state.geo.position.city.replace('市','')
+                }
+            }).then((res)=>{
+                let{status, data:{result}} = res
+                console.log(result)
+                this.suggestList = result
+            })
+       }
    }
 
 

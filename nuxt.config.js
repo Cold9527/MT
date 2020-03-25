@@ -44,6 +44,9 @@ module.exports = {
   modules: [
     '@nuxtjs/axios'
   ],
+  router: {
+    mode: 'history'
+  },
   /*
   ** Build configuration
   */
