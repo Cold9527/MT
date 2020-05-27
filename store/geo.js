@@ -1,5 +1,5 @@
 export const state = () => ({
-  position: {}
+  position:{},
 })
  
 export const mutations = {
@@ -7,6 +7,7 @@ export const mutations = {
     state.position = val
   }
 }
+
 export const actions = {
   setPosition({commit}, position){
     commit('setPosition',position)
