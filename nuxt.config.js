@@ -31,7 +31,8 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '@/plugins/element-ui'
+    '@/plugins/element-ui',
+    '@/plugins/bus-inject'
   ],
   /*
   ** Nuxt.js dev-modules
@@ -44,6 +45,9 @@ module.exports = {
   modules: [
     '@nuxtjs/axios'
   ],
+  router: {
+    mode: 'history'
+  },
   /*
   ** Build configuration
   */

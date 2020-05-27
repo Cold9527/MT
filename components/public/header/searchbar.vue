@@ -13,18 +13,26 @@
                       @blur="blur"
                       @input='input'/>
                     <button class="el-button el-button--primary">    
-                        <i class ='el-icon-search' />
+                        <i class ='el-icon-search' /> 
                     </button>
                     <dl class="hotPlace" v-if='isHotPlace'>
-                        <dt>热门搜索</dt>
-                        <dd v-for="item in this.$store.state.home.Hotplace.slice(0,5)" :key="item.index">{{item.name}}</dd>
+                        <dt>{{cityC}}</dt>
+                        <dd v-for="item in this.$store.state.home.Hotplace.slice(0,5)" :key="item.index">
+                            <a :href="'/products?keyword='+encodeURIComponent(item.name)">
+                                {{item.name}}
+                            </a>
+                        </dd>
                     </dl>
                     <dl class="searchList" v-if='isSearchList'>
-                        <dd v-for="item in searchList" :key="item.index">{{item.name}}</dd>
+                        <dd v-for="item in searchList" :key="item.index">
+                            <a :href="'/products?keyword='+encodeURIComponent(item.name)">
+                                {{item.name}}
+                            </a>
+                        </dd>
                     </dl>                    
                 </div>
                 <p class='suggest'>
-                    <a href='#' v-for="item in this.$store.state.home.Hotplace.slice(5,9)" :key="item.index">{{item.name}}</a>
+                    <a :href="'/products?keyword='+encodeURIComponent(item.name)" v-for="item in suggestList" :key="item.index">{{item.name}}</a>
                 </p>
                 <ul class='nav'>
                     <li>
@@ -64,7 +72,9 @@ export default {
         isFocus: false,
         search:'',
         hotPlace:[],
-        searchList:[]
+        searchList:[],
+        suggestList:[],
+        cityC:''
       }
    },
    computed:{
@@ -75,6 +85,15 @@ export default {
         return this.isFocus && this.search
        }
    },
+   mounted(){
+       this.hotPlaceChange()
+       this.$bus.$on('city', (city)=>{
+           this.cityC = city
+       })      
+   },
+//    watch: {
+//     "$route": "hotPlaceChange"
+//    },
    methods:{
        focus(){
         this.isFocus = true
@@ -85,16 +104,29 @@ export default {
          },200)         
        },
        input:_.debounce(async function(){
-           let city = this.$store.state.geo.position.city.replace('市','')
+           this.city = this.$store.state.geo.position.city.replace('市','')
            this.searchList = []
            let {status, data:{top}} = await this.$axios.get('/search/top',{
                params:{
                    input:this.search,
-                   city
+                   city: this.city
                }
            })
            this.searchList = top.slice(0, 10)
-       },300)
+       },300),
+       
+       hotPlaceChange(){
+            console.log(this.$store.state.geo.position.city)
+            this.$axios.get('/search/hotPlace', {
+                params:{
+                    city:this.$store.state.geo.position.city.replace('市','')
+                }
+            }).then((res)=>{
+                let{status, data:{result}} = res
+
+                this.suggestList = result.slice(6,11)
+            })
+       }
    }
 
 
