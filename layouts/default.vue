@@ -14,7 +14,7 @@ export default {
   components:{
     MyHeader,
     MyFooter
-  }  
+  },
 }
 </script>
 <style>
